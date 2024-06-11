@@ -1,5 +1,5 @@
-import pygame
 import time
+import pygame
 import numpy as np
 
 # game constants
@@ -88,10 +88,13 @@ def main():
 
 
 			if pygame.mouse.get_pressed()[0]:
-				pos = pygame.mouse.get_pos()
-				cells[pos[1] // 10, pos[0] // 10] = 1 #10: size
-				update(screen, cells)
-				pygame.display.update()
+				try:
+					pos = pygame.mouse.get_pos()
+					cells[pos[1] // 10, pos[0] // 10] = 1 #10: size
+					update(screen, cells)
+					pygame.display.update()
+				except:
+					pass
 
 		screen.fill(COLOR_GRID)
 
