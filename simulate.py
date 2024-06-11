@@ -12,10 +12,14 @@ CELL_SIZE = (60, 80)
 
 
 def update(screen, cells, size=10, with_progress=False):
-	updated_cells = np.zeros((cells.shape[0], cells.shape[1]))
+	'''
+	update cells for the next generation
+	'''
 
+	updated_cells = np.zeros((cells.shape[0], cells.shape[1]))
+	
 	for row, col in np.ndindex(cells.shape):
-		alive = np.sum(cells[row-1:row+2, col-1:col+2]) - cells[row, col] #sum of neighbours
+		alive = np.sum(cells[row-1 : row+2, col-1 : col+2]) - cells[row, col] # sum of neighbours
 		color = COLOR_BG if cells[row, col] == 0 else COLOR_ALIVE_NEXT
 
 		if cells[row, col] == 1: # cell is alive currently
@@ -40,10 +44,24 @@ def update(screen, cells, size=10, with_progress=False):
 	return updated_cells
 
 
+def clear_screen(screen):
+	'''
+	clears the window
+	'''
+	cells = np.zeros(CELL_SIZE)
+	screen.fill(COLOR_GRID)
+	update(screen, cells)
+	pygame.display.flip()
+
+	return cells
+
+
 def main():
 	pygame.init()
+	pygame.display.set_caption('Game of Life')
+	pygame.display.set_icon(pygame.image.load('icon.ico'))
 	screen = pygame.display.set_mode(WINDOW_SIZE)
-
+	
 	cells = np.zeros(CELL_SIZE)
 	screen.fill(COLOR_GRID)
 	update(screen, cells)
@@ -52,7 +70,6 @@ def main():
 	pygame.display.update()
 
 	running = False
-
 	while True:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -64,6 +81,11 @@ def main():
 					running = not running
 					update(screen, cells)
 					pygame.display.update()
+
+				if event.key == pygame.K_ESCAPE:
+					cells = clear_screen(screen)
+					running = False
+
 
 			if pygame.mouse.get_pressed()[0]:
 				pos = pygame.mouse.get_pos()
